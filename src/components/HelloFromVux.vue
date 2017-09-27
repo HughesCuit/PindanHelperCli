@@ -76,7 +76,7 @@ export default {
       let result = axios.request({
         url: '/api/pindan',
         method: 'POST',
-        baseURL: 'http://localhost:3000',
+        baseURL: 'http://120.27.17.226:3000',
         headers: {'Content-Type': 'application/json'},
         data: params
       })
