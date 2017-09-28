@@ -1,8 +1,11 @@
 <template>
   <div>
     <div class="vux-demo">
-      <h1> 拼单助手 </h1>
+      <x-header :left-options="{showBack: false}"> 拼单助手 </x-header>
     </div>
+    <group title="拼单">
+      <cell-form-preview :list="list" is-link></cell-form-preview>
+    </group>
     <div class="appending-area">
       <group>
         <x-input type="text" title="名字" placeholder="名字" ref="nameInput" @on-focus="nameFocus" @on-enter="nameEnter" v-model="name" ></x-input>
@@ -12,11 +15,6 @@
         <XButton type="primary" v-on:click.native="submit(total_price)" >提交</XButton>
       </group>
     </div>
-    <group title="拼单">
-      <cell-form-preview :list="list" is-link></cell-form-preview>
-    </group>
-    <div class="submit-area">
-    </div>
     <group title="结算">
       <cell-form-preview :list="prices" is-link></cell-form-preview>
     </group>
@@ -24,7 +22,7 @@
 </template>
 
 <script>
-import { Group, Cell, CellFormPreview, XButton, XInput } from 'vux'
+import { Group, Cell, CellFormPreview, XButton, XInput, XHeader } from 'vux'
 import axios from 'axios'
 
 export default {
@@ -34,6 +32,7 @@ export default {
     CellFormPreview,
     XButton,
     XInput,
+    XHeader,
     axios
   },
   data () {
