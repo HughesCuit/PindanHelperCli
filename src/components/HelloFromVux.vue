@@ -4,13 +4,13 @@
       <h1> 拼单助手 </h1>
     </div>
     <div class="appending-area">
-      <label>名字</label>
-      <input type="text" placeholder="名字" v-model="name" v-focus="focusStatus">
-      <label>价格</label>
-      <input type="text" placeholder="价格" v-model="price">
-      <button type="submit" v-on:click="append(name, price)" >添加</button>
-      <input type="text" placeholder="总价" v-model="total_price">
-      <button type="submit" v-on:click="submit(total_price)" >提交</button>
+      <group>
+        <x-input type="text" title="名字" placeholder="名字" ref="nameInput" @on-focus="nameFocus" @on-enter="nameEnter" v-model="name" ></x-input>
+        <x-input type="number" title="价格" placeholder="价格" ref="priceInput" @on-focus="priceFocus" @on-enter="priceEnter" v-model="price"></x-input>
+        <XButton type="primary" v-on:click.native="append(name, price)" >添加</XButton>
+        <x-input type="number" title="总价" placeholder="总价" ref="totalPriceInput" @on-focus="totalPriceFocus" @on-enter="submit(total_price)" v-model="total_price"></x-input>
+        <XButton type="primary" v-on:click.native="submit(total_price)" >提交</XButton>
+      </group>
     </div>
     <group title="拼单">
       <cell-form-preview :list="list" is-link></cell-form-preview>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { Group, Cell, CellFormPreview } from 'vux'
+import { Group, Cell, CellFormPreview, XButton, XInput } from 'vux'
 import axios from 'axios'
 
 export default {
@@ -32,6 +32,8 @@ export default {
     Group,
     Cell,
     CellFormPreview,
+    XButton,
+    XInput,
     axios
   },
   data () {
@@ -40,27 +42,32 @@ export default {
       prices: []
     }
   },
-  directives: {
-    focus: {
-      inserted: function (el, {value}) {
-        if (value) {
-          el.focus()
-        }
-      },
-      update: function (el, {value}) {
-        if (value) {
-          el.focus()
-        }
-      }
-    }
-  },
   methods: {
+    nameFocus: function () {
+      this.name = ''
+    },
+    nameEnter: function () {
+      this.$refs.priceInput.focus()
+    },
+    priceFocus: function () {
+      this.price = ''
+    },
+    totalPriceFocus: function () {
+      this.total_price = ''
+    },
+    priceEnter: function () {
+      let name = this.name
+      let price = this.price
+      this.append(name, price)
+    },
     append: function (name, price) {
       this.list.push({
         label: name,
         value: price
       })
-      this.focusStatus = true
+      this.name = ''
+      this.price = ''
+      this.$refs.nameInput.focus()
     },
     submit: function (totalPrice) {
       let params = {
@@ -76,7 +83,7 @@ export default {
       let result = axios.request({
         url: '/api/pindan',
         method: 'POST',
-        baseURL: 'http://localhost:3000',
+        baseURL: 'http://120.27.17.226',
         headers: {'Content-Type': 'application/json'},
         data: params
       })
@@ -111,18 +118,11 @@ export default {
   width: 100px;
   height: 100px
 }
-input, button {
-  width: 100px;
-  height: 30px;
-}
+
 .appending-area, .appending-btn, .submit-area {
   text-align: center;
   top: 50px;
 }
-label {
-  left: 50px;
-}
-
 .appending-btn > button {
   width: 100px;
   height: 20px;
